@@ -1,6 +1,11 @@
 #!/bin/sh
 set -ex
 
+if [ -z "$TAGVER" ]; then
+  echo "env TAGVER not set"
+  exit 1
+fi
+
 mkdir tmp
 
 cp -r zig-linux-aarch64-$TAGVER tmp/zig-common
@@ -17,8 +22,15 @@ cp zig-freebsd-x86_64-$TAGVER/zig tmp/zig-freebsd-x86_64
 mkdir zig-ape-$TAGVER
 cosmoc++ -std=c++23 -fexceptions -DTAGVER=\"$TAGVER\" -o zig-ape-$TAGVER/zig zig-ape.cpp
 
+rm zig-ape-$TAGVER/zig.aarch64.elf
+rm zig-ape-$TAGVER/zig.com.dbg
+
+mv zig-ape-$TAGVER/zig zig-ape-$TAGVER/zig.zip
+
 cd tmp
-7z a ../zig-ape-$TAGVER/zig zig-common zig-windows-x86_64.exe zig-windows-aarch64.exe zig-macos-aarch64 zig-macos-x86_64 zig-linux-x86_64 zig-linux-aarch64 zig-freebsd-x86_64
+7z a ../zig-ape-$TAGVER/zig.zip zig-common zig-windows-x86_64.exe zig-windows-aarch64.exe zig-macos-aarch64 zig-macos-x86_64 zig-linux-x86_64 zig-linux-aarch64 zig-freebsd-x86_64
 cd ..
 
 rm -rf tmp
+
+mv zig-ape-$TAGVER/zig.zip zig-ape-$TAGVER/zig
