@@ -1,3 +1,59 @@
+# Zig [APE](https://justine.lol/ape.html)
+
+🏷️ Single-executable Self-extracting multiplatform Zig releases
+
+<table align=center><td>
+
+```sh
+wget https://github.com/jcbhmr/release-cutter/releases/download/0.13.0/zig-ape-0.13.0.zip
+unzip zig-ape-0.13.0.zip
+./zig-ape-0.13.0/zig zen
+```
+
+</table>
+
+🌌 Uses [`cosmocc`](https://github.com/jart/cosmopolitan/tree/master/tool/cosmocc) to build a multiplatform binary \
+📂 Extracts the platform-specific `zig` and `lib/*` files to a cache folder \
+💻 Works on Windows, macOS, and Linux on both x86-64 & AArch64 CPUs \
+**😎 It's just one binary!**
+
+## Installation
+
+![Windows](https://img.shields.io/static/v1?style=for-the-badge&message=Windows&color=0078D4&logo=Windows&logoColor=FFFFFF&label=)
+![Linux](https://img.shields.io/static/v1?style=for-the-badge&message=Linux&color=222222&logo=Linux&logoColor=FCC624&label=)
+![macOS](https://img.shields.io/static/v1?style=for-the-badge&message=macOS&color=000000&logo=macOS&logoColor=FFFFFF&label=)
+
+**🛑 This is an unofficial redistribution of the Zig binaries.** You should probably use [the official Zig download page](https://ziglang.org/download/). 
+
+1. Download the zip.
+2. Extract it.
+3. Rename it to `zig.com` or `zig.exe`. (Windows only)
+
+**https://github.com/jcbhmr/release-cutter/releases/download/0.13.0/zig-ape-0.13.0.zip**
+
+The all-in-one binary should work on the following platforms:
+
+- Windows x86-64
+- Windows AArch64
+- macOS x86-64
+- macOS AArch64
+- Linux x86-64
+- Linux AArch64
+- FreeBSD x86-64
+
+**For other platforms make sure you check out [Zig's official download page](https://ziglang.org/download/).**
+
+## Development
+
+![C++](https://img.shields.io/static/v1?style=for-the-badge&message=C%2B%2B&color=00599C&logo=C%2B%2B&logoColor=FFFFFF&label=)
+![GitHub Actions](https://img.shields.io/static/v1?style=for-the-badge&message=GitHub+Actions&color=2088FF&logo=GitHub+Actions&logoColor=FFFFFF&label=)
+
+This is a fork of the Zig project. **It's not official.** I don't know if the Zig project wants or would want to publish a self-extracting self-executing multiplatform binary. 🤷‍♀️
+
+Right now there's [a bug in Cosmopolitan Libc](https://github.com/jart/cosmopolitan/issues/1248) that has been fixed but hasn't been published as a release yet. You'll need to build `cosmocc` from source to use the fix.
+
+---
+
 # Release Cutter
 
 Helpful scripts for cutting a Zig release.
