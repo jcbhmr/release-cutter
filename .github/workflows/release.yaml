@@ -1,0 +1,81 @@
+name: release
+on:
+  workflow_dispatch:
+    inputs:
+      draft:
+        type: boolean
+        default: true
+concurrency: ${{ github.workflow }}
+jobs:
+  tagver:
+    outputs:
+      version: ${{ steps.tagver.outputs.tagver }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: tagver
+        run: |
+          tagver=$(grep -Po 'TAGVER=\S+' script | cut -d'=' -f2)
+          echo "tagver=$tagver" >> "$GITHUB_OUTPUT"
+  create-release:
+    needs: tagver
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - env:
+          TAGVER: ${{ needs.tagver.outputs.tagver }}
+        run: |
+          wget -q "https://ziglang.org/download/$TAGVER/zig-windows-x86_64-$TAGVER.zip"
+          wget -q "https://ziglang.org/download/$TAGVER/zig-windows-aarch64-$TAGVER.zip"
+          wget -q "https://ziglang.org/download/$TAGVER/zig-macos-aarch64-$TAGVER.tar.xz"
+          wget -q "https://ziglang.org/download/$TAGVER/zig-macos-x86_64-$TAGVER.tar.xz"
+          wget -q "https://ziglang.org/download/$TAGVER/zig-linux-x86_64-$TAGVER.tar.xz"
+          wget -q "https://ziglang.org/download/$TAGVER/zig-linux-aarch64-$TAGVER.tar.xz"
+          wget -q "https://ziglang.org/download/$TAGVER/zig-freebsd-x86_64-$TAGVER.tar.xz"
+
+          unzip -q "zig-windows-x86_64-$TAGVER.zip"
+          unzip -q "zig-windows-aarch64-$TAGVER.zip"
+          tar xf "zig-macos-aarch64-$TAGVER.tar.xz"
+          tar xf "zig-macos-x86_64-$TAGVER.tar.xz"
+          tar xf "zig-linux-x86_64-$TAGVER.tar.xz"
+          tar xf "zig-linux-aarch64-$TAGVER.tar.xz"
+          tar xf "zig-freebsd-x86_64-$TAGVER.tar.xz"
+
+          rm "zig-windows-x86_64-$TAGVER.zip"
+          rm "zig-windows-aarch64-$TAGVER.zip"
+          rm "zig-macos-aarch64-$TAGVER.tar.xz"
+          rm "zig-macos-x86_64-$TAGVER.tar.xz"
+          rm "zig-linux-x86_64-$TAGVER.tar.xz"
+          rm "zig-linux-aarch64-$TAGVER.tar.xz"
+          rm "zig-freebsd-x86_64-$TAGVER.tar.xz"
+      - run: ./build-zig-ape
+      - env:
+          TAGVER: ${{ needs.tagver.outputs.tagver }}
+        run: |
+          tar cJf zig-linux-aarch64-$TAGVER.tar.xz zig-linux-aarch64-$TAGVER/
+          tar cJf zig-linux-armv7a-$TAGVER.tar.xz zig-linux-armv7a-$TAGVER/
+          tar cJf zig-linux-i386-$TAGVER.tar.xz zig-linux-i386-$TAGVER/
+          tar cJf zig-linux-riscv64-$TAGVER.tar.xz zig-linux-riscv64-$TAGVER/
+          tar cJf zig-linux-x86_64-$TAGVER.tar.xz zig-linux-x86_64-$TAGVER/
+          #7z a zig-windows-i386-$TAGVER.zip zig-windows-i386-$TAGVER/
+          7z a zig-windows-x86_64-$TAGVER.zip zig-windows-x86_64-$TAGVER/
+          7z a zig-windows-aarch64-$TAGVER.zip zig-windows-aarch64-$TAGVER/
+          tar cJf zig-macos-aarch64-$TAGVER.tar.xz zig-macos-aarch64-$TAGVER/
+          tar cJf zig-macos-x86_64-$TAGVER.tar.xz zig-macos-x86_64-$TAGVER/
+          tar cJf zig-freebsd-x86_64-$TAGVER.tar.xz zig-freebsd-x86_64-$TAGVER/
+          7z a zig-ape-$TAGVER.zip zig-ape-$TAGVER/
+      - env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAGVER: ${{ needs.tagver.outputs.tagver }}
+        run: |
+          gh release create "$TAGVER" \
+            --title "$TAGVER" \
+            --notes "https://ziglang.org/download/#release-$TAGVER" \
+            "zig-windows-x86_64-$TAGVER.zip" \
+            "zig-windows-aarch64-$TAGVER.zip" \
+            "zig-macos-aarch64-$TAGVER.tar.xz" \
+            "zig-macos-x86_64-$TAGVER.tar.xz" \
+            "zig-linux-x86_64-$TAGVER.tar.xz" \
+            "zig-linux-aarch64-$TAGVER.tar.xz" \
+            "zig-freebsd-x86_64-$TAGVER.tar.xz" \
+            "zig-ape-$TAGVER.zip"
