@@ -9,7 +9,7 @@
 # Programs needed: 7z s3cmd xz cosmocc
 
 RELDIR=$(pwd)
-TAGVER=0.10.0
+TAGVER=0.13.0
 BOOTSTRAP_SRC="$HOME/dev/bootstrap-zig"
 # This must have zig built for the tagged release, along with having run `./zig build docs`.
 REL_SRC_BUILD="$HOME/tmp/zig/build-release"
