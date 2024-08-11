@@ -62,7 +62,9 @@ jobs:
           rm "zig-linux-x86_64-$TAGVER.tar.xz"
           rm "zig-linux-aarch64-$TAGVER.tar.xz"
           rm "zig-freebsd-x86_64-$TAGVER.tar.xz"
-      - run: ./build-zig-ape
+      - env:
+          TAGVER: ${{ needs.tagver.outputs.tagver }}
+        run: ./build-zig-ape
       - env:
           TAGVER: ${{ needs.tagver.outputs.tagver }}
         run: 7z a zig-ape-$TAGVER.zip zig-ape-$TAGVER/
