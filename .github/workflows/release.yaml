@@ -24,6 +24,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: jart/cosmopolitan
+          path: cosmopolitan
+      - working-directory: cosmopolitan
+        run: |
+          ./tool/cosmocc/package.sh
+          echo "$PWD/cosmocc/bin" >> "$GITHUB_PATH"
+          sudo wget -O /usr/bin/ape https://cosmo.zip/pub/cosmos/bin/ape-$(uname -m).elf
+          sudo chmod +x /usr/bin/ape
+          sudo sh -c "echo ':APE:M::MZqFpD::/usr/bin/ape:' >/proc/sys/fs/binfmt_misc/register"
+          sudo sh -c "echo ':APE-jart:M::jartsr::/usr/bin/ape:' >/proc/sys/fs/binfmt_misc/register"
       - env:
           TAGVER: ${{ needs.tagver.outputs.tagver }}
         run: |
@@ -53,19 +65,7 @@ jobs:
       - run: ./build-zig-ape
       - env:
           TAGVER: ${{ needs.tagver.outputs.tagver }}
-        run: |
-          tar cJf zig-linux-aarch64-$TAGVER.tar.xz zig-linux-aarch64-$TAGVER/
-          tar cJf zig-linux-armv7a-$TAGVER.tar.xz zig-linux-armv7a-$TAGVER/
-          tar cJf zig-linux-i386-$TAGVER.tar.xz zig-linux-i386-$TAGVER/
-          tar cJf zig-linux-riscv64-$TAGVER.tar.xz zig-linux-riscv64-$TAGVER/
-          tar cJf zig-linux-x86_64-$TAGVER.tar.xz zig-linux-x86_64-$TAGVER/
-          #7z a zig-windows-i386-$TAGVER.zip zig-windows-i386-$TAGVER/
-          7z a zig-windows-x86_64-$TAGVER.zip zig-windows-x86_64-$TAGVER/
-          7z a zig-windows-aarch64-$TAGVER.zip zig-windows-aarch64-$TAGVER/
-          tar cJf zig-macos-aarch64-$TAGVER.tar.xz zig-macos-aarch64-$TAGVER/
-          tar cJf zig-macos-x86_64-$TAGVER.tar.xz zig-macos-x86_64-$TAGVER/
-          tar cJf zig-freebsd-x86_64-$TAGVER.tar.xz zig-freebsd-x86_64-$TAGVER/
-          7z a zig-ape-$TAGVER.zip zig-ape-$TAGVER/
+        run: 7z a zig-ape-$TAGVER.zip zig-ape-$TAGVER/
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAGVER: ${{ needs.tagver.outputs.tagver }}
@@ -73,11 +73,4 @@ jobs:
           gh release create "$TAGVER" \
             --title "$TAGVER" \
             --notes "https://ziglang.org/download/#release-$TAGVER" \
-            "zig-windows-x86_64-$TAGVER.zip" \
-            "zig-windows-aarch64-$TAGVER.zip" \
-            "zig-macos-aarch64-$TAGVER.tar.xz" \
-            "zig-macos-x86_64-$TAGVER.tar.xz" \
-            "zig-linux-x86_64-$TAGVER.tar.xz" \
-            "zig-linux-aarch64-$TAGVER.tar.xz" \
-            "zig-freebsd-x86_64-$TAGVER.tar.xz" \
             "zig-ape-$TAGVER.zip"
