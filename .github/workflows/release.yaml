@@ -4,7 +4,6 @@ on:
     inputs:
       draft:
         type: boolean
-        default: true
 concurrency: ${{ github.workflow }}
 jobs:
   tagver:
