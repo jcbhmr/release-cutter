@@ -52,6 +52,8 @@ This is a fork of the Zig project. **It's not official.** I don't know if the Zi
 
 Right now there's [a bug in Cosmopolitan Libc](https://github.com/jart/cosmopolitan/issues/1248) that has been fixed but hasn't been published as a release yet. You'll need to build `cosmocc` from source to use the fix.
 
+This fork uses GitHub actions to run only part of the release script. It doesn't actually build Zig from source.
+
 ---
 
 # Release Cutter
