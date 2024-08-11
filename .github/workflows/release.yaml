@@ -9,7 +9,7 @@ concurrency: ${{ github.workflow }}
 jobs:
   tagver:
     outputs:
-      version: ${{ steps.tagver.outputs.tagver }}
+      tagver: ${{ steps.tagver.outputs.tagver }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,13 +39,13 @@ jobs:
       - env:
           TAGVER: ${{ needs.tagver.outputs.tagver }}
         run: |
-          wget -q "https://ziglang.org/download/$TAGVER/zig-windows-x86_64-$TAGVER.zip"
-          wget -q "https://ziglang.org/download/$TAGVER/zig-windows-aarch64-$TAGVER.zip"
-          wget -q "https://ziglang.org/download/$TAGVER/zig-macos-aarch64-$TAGVER.tar.xz"
-          wget -q "https://ziglang.org/download/$TAGVER/zig-macos-x86_64-$TAGVER.tar.xz"
-          wget -q "https://ziglang.org/download/$TAGVER/zig-linux-x86_64-$TAGVER.tar.xz"
-          wget -q "https://ziglang.org/download/$TAGVER/zig-linux-aarch64-$TAGVER.tar.xz"
-          wget -q "https://ziglang.org/download/$TAGVER/zig-freebsd-x86_64-$TAGVER.tar.xz"
+          wget "https://ziglang.org/download/$TAGVER/zig-windows-x86_64-$TAGVER.zip"
+          wget "https://ziglang.org/download/$TAGVER/zig-windows-aarch64-$TAGVER.zip"
+          wget "https://ziglang.org/download/$TAGVER/zig-macos-aarch64-$TAGVER.tar.xz"
+          wget "https://ziglang.org/download/$TAGVER/zig-macos-x86_64-$TAGVER.tar.xz"
+          wget "https://ziglang.org/download/$TAGVER/zig-linux-x86_64-$TAGVER.tar.xz"
+          wget "https://ziglang.org/download/$TAGVER/zig-linux-aarch64-$TAGVER.tar.xz"
+          wget "https://ziglang.org/download/$TAGVER/zig-freebsd-x86_64-$TAGVER.tar.xz"
 
           unzip -q "zig-windows-x86_64-$TAGVER.zip"
           unzip -q "zig-windows-aarch64-$TAGVER.zip"
