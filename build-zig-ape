@@ -1,0 +1,24 @@
+#!/bin/sh
+set -ex
+
+mkdir tmp
+
+cp -r zig-linux-aarch64-$TAGVER tmp/zig-common
+rm tmp/zig-common/zig
+
+cp zig-linux-aarch64-$TAGVER/zig tmp/zig-linux-aarch64
+cp zig-linux-x86_64-$TAGVER/zig tmp/zig-linux-x86_64
+cp zig-windows-x86_64-$TAGVER/zig.exe tmp/zig-windows-x86_64.exe
+cp zig-windows-aarch64-$TAGVER/zig.exe tmp/zig-windows-aarch64.exe
+cp zig-macos-aarch64-$TAGVER/zig tmp/zig-macos-aarch64
+cp zig-macos-x86_64-$TAGVER/zig tmp/zig-macos-x86_64
+cp zig-freebsd-x86_64-$TAGVER/zig tmp/zig-freebsd-x86_64
+
+mkdir zig-ape-$TAGVER
+cosmoc++ -std=c++23 -fexceptions -DTAGVER=\"$TAGVER\" -o zig-ape-$TAGVER/zig zig-ape.cpp
+
+cd tmp
+7z a ../zig-ape-$TAGVER/zig zig-common zig-windows-x86_64.exe zig-windows-aarch64.exe zig-macos-aarch64 zig-macos-x86_64 zig-linux-x86_64 zig-linux-aarch64 zig-freebsd-x86_64
+cd ..
+
+rm -rf tmp
