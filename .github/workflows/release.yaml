@@ -73,6 +73,7 @@ jobs:
           TAGVER: ${{ needs.tagver.outputs.tagver }}
         run: |
           gh release create "$TAGVER" \
+            ${{ (inputs.draft && '--draft') || '' }} \
             --title "$TAGVER" \
             --notes "https://ziglang.org/download/#release-$TAGVER" \
             "zig-ape-$TAGVER.zip"
