@@ -15,10 +15,12 @@ jobs:
       - uses: actions/checkout@v4
       - id: tagver
         run: |
-          tagver=$(grep -Po 'TAGVER=\S+' script | cut -d'=' -f2)
+          tagver=$(grep -Po 'TAGVER=\S+' script | head -n1 | cut -d'=' -f2)
           echo "tagver=$tagver" >> "$GITHUB_OUTPUT"
   create-release:
     needs: tagver
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
