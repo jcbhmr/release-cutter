@@ -6,7 +6,7 @@
 # * CMakeLists.txt
 # * build.zig
 # Make commit to start the next release cycle
-# Programs needed: 7z s3cmd xz
+# Programs needed: 7z s3cmd xz cosmocc
 
 RELDIR=$(pwd)
 TAGVER=0.10.0
@@ -156,6 +156,10 @@ cp -r $REL_SRC_BUILD/doc-freebsd-x86_64 zig-freebsd-x86_64-$TAGVER/doc/std
 #rm -rf zig-macos-x86_64-$TAGVER/doc/std/src
 #rm -rf zig-freebsd-x86_64-$TAGVER/doc/std/src
 
+# build self-extracting multiplatform all-in-one ape binary
+# https://github.com/jart/cosmopolitan
+TAGVER=$TAGVER ./build-zig-ape
+
 tar cJf zig-linux-aarch64-$TAGVER.tar.xz zig-linux-aarch64-$TAGVER/
 tar cJf zig-linux-armv7a-$TAGVER.tar.xz zig-linux-armv7a-$TAGVER/
 tar cJf zig-linux-i386-$TAGVER.tar.xz zig-linux-i386-$TAGVER/
@@ -167,6 +171,7 @@ tar cJf zig-linux-x86_64-$TAGVER.tar.xz zig-linux-x86_64-$TAGVER/
 tar cJf zig-macos-aarch64-$TAGVER.tar.xz zig-macos-aarch64-$TAGVER/
 tar cJf zig-macos-x86_64-$TAGVER.tar.xz zig-macos-x86_64-$TAGVER/
 tar cJf zig-freebsd-x86_64-$TAGVER.tar.xz zig-freebsd-x86_64-$TAGVER/
+7z a zig-ape-$TAGVER.zip zig-ape-$TAGVER/
 
 s3cmd put -P --add-header="cache-control: public, max-age=31536000, immutable" zig-$TAGVER.tar.xz s3://ziglang.org/download/$TAGVER/
 s3cmd put -P --add-header="cache-control: public, max-age=31536000, immutable" zig-bootstrap-$TAGVER.tar.xz s3://ziglang.org/download/$TAGVER/
@@ -181,6 +186,7 @@ s3cmd put -P --add-header="cache-control: public, max-age=31536000, immutable" z
 s3cmd put -P --add-header="cache-control: public, max-age=31536000, immutable" zig-macos-aarch64-$TAGVER.tar.xz s3://ziglang.org/download/$TAGVER/
 s3cmd put -P --add-header="cache-control: public, max-age=31536000, immutable" zig-macos-x86_64-$TAGVER.tar.xz s3://ziglang.org/download/$TAGVER/
 s3cmd put -P --add-header="cache-control: public, max-age=31536000, immutable" zig-freebsd-x86_64-$TAGVER.tar.xz s3://ziglang.org/download/$TAGVER/
+s3cmd put -P --add-header="cache-control: public, max-age=31536000, immutable" zig-ape-$TAGVER.zpi s3://ziglang.org/download/$TAGVER/
 
 sha256sum *.tar.xz *.zip
 ls -l *.tar.xz *.zip
