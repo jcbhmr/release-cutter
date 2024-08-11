@@ -1,4 +1,4 @@
-# Zig [APE](https://justine.lol/ape.html)
+# Zig multiplatform
 
 🏷️ Single-executable Self-extracting multiplatform Zig releases
 
