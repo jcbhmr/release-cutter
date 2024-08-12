@@ -1,6 +1,7 @@
 # Zig multiplatform
 
-🏷️ Single-executable Self-extracting multiplatform Zig releases
+🏷️ Single-executable Self-extracting multiplatform Zig releases \
+🔀 Forked from [ziglang/releases-cutter](https://github.com/ziglang/release-cutter)
 
 <table align=center><td>
 
@@ -48,11 +49,11 @@ The all-in-one binary should work on the following platforms:
 ![C++](https://img.shields.io/static/v1?style=for-the-badge&message=C%2B%2B&color=00599C&logo=C%2B%2B&logoColor=FFFFFF&label=)
 ![GitHub Actions](https://img.shields.io/static/v1?style=for-the-badge&message=GitHub+Actions&color=2088FF&logo=GitHub+Actions&logoColor=FFFFFF&label=)
 
-This is a fork of the Zig project. **It's not official.** I don't know if the Zig project wants or would want to publish a self-extracting self-executing multiplatform binary. 🤷‍♀️
+This is a fork of Zig's release script repository. **This project's releases are not official.** I don't know if the Zig project wants or would want to publish a self-extracting self-executing multiplatform binary. 🤷‍♀️
 
 Right now there's [a bug in Cosmopolitan Libc](https://github.com/jart/cosmopolitan/issues/1248) that has been fixed but hasn't been published as a release yet. You'll need to build `cosmocc` from source to use the fix.
 
-This fork uses GitHub actions to run only part of the release script. It doesn't actually build Zig from source.
+The GitHub actions workflow doesn't actually build Zig from source; it pulls the precompiled artifacts from the [Zig downloads page](https://ziglang.org/download/) and moves them around to where the script expects the build artifacts to be. It also only runs the `./build-zig-ape` script and not the full `./script` release script.
 
 ---
 
