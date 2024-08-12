@@ -17,20 +17,6 @@ __static_yoink("zipos");
 int main(int argc, char *argv[]);
 std::filesystem::path user_cache_dir();
 [[noreturn]] void my_exec(const std::filesystem::path& path, char *const argv[]);
-auto IsX64() {
-  #if defined(__x86_64__) || defined(_M_X64)
-    return true;
-  #else
-    return false;
-  #endif
-}
-auto IsArm64() {
-  #if defined(__aarch64__) || defined(_M_ARM64)
-    return true;
-  #else
-    return false;
-  #endif
-}
 
 int main(int argc, char *argv[]) {
   auto const cache_dir = user_cache_dir();
@@ -38,34 +24,37 @@ int main(int argc, char *argv[]) {
     std::filesystem::create_directories(cache_dir);
     try {
       std::filesystem::copy("/zip/zig-common", cache_dir, std::filesystem::copy_options::recursive);
-      if (IsFreebsd() && IsX64()) {
+#if defined(__x86_64__)
+      if (IsFreebsd()) {
         std::filesystem::copy_file("/zip/zig-freebsd-x86_64", cache_dir / "zig");
-      } else if (IsLinux() && IsArm64()) {
-        std::filesystem::copy_file("/zip/zig-linux-aarch64", cache_dir / "zig");
-      } else if (IsLinux() && IsX64()) {
-        std::filesystem::copy_file("/zip/zig-linux-x86_64", cache_dir / "zig");
-      } else if (IsXnu() && IsArm64()) {
-        std::filesystem::copy_file("/zip/zig-macos-aarch64", cache_dir / "zig");
-      } else if (IsXnu() && IsX64()) {
+      } else if (IsXnu()) {
         std::filesystem::copy_file("/zip/zig-macos-x86_64", cache_dir / "zig");
-      } else if (IsWindows() && IsX64()) {
+      } else if (IsLinux()) {
+        std::filesystem::copy_file("/zip/zig-linux-x86_64", cache_dir / "zig");
+      } else if (IsWindows()) {
         std::filesystem::copy_file("/zip/zig-windows-x86_64.exe", cache_dir / "zig.exe");
-      } else if (IsWindows() && IsArm64()) {
-        std::filesystem::copy_file("/zip/zig-windows-arm64.exe", cache_dir / "zig.exe");
       } else {
-        throw std::runtime_error("unsupported platform");
+        throw std::runtime_error("unsupported os");
       }
+#elif defined(__aarch64__)
+      }if (IsXnu()) {
+        std::filesystem::copy_file("/zip/zig-macos-aarch64", cache_dir / "zig");
+      } else if (IsLinux()) {
+        std::filesystem::copy_file("/zip/zig-linux-aarch64", cache_dir / "zig");
+      } else if (IsWindows()) {
+        std::filesystem::copy_file("/zip/zig-windows-aarch64.exe", cache_dir / "zig.exe");
+      } else {
+        throw std::runtime_error("unsupported os");
+      }
+#else
+#error "unsupported arch"
+#endif
     } catch (...) {
       std::filesystem::remove_all(cache_dir);
       throw;
     }
   }
-
-  if (IsWindows()) {
-    my_exec(cache_dir / "zig.exe", argv);
-  } else {
-    my_exec(cache_dir / "zig", argv);
-  }
+  my_exec(cache_dir / (IsWindows() ? "zig.exe" : "zig"), argv);
 }
 
 std::filesystem::path user_cache_dir() {
@@ -114,6 +103,7 @@ std::filesystem::path user_cache_dir() {
 
     int status;
     while (waitpid(pid, &status, 0) != -1);
+    // TODO: Does this handle everything properly?
     if (WIFEXITED(status)) {
       std::exit(WEXITSTATUS(status));
     } else {
