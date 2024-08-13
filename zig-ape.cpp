@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
         throw std::runtime_error("unsupported os");
       }
 #elif defined(__aarch64__)
-      }if (IsXnu()) {
+      if (IsXnu()) {
         std::filesystem::copy_file("/zip/zig-macos-aarch64", cache_dir / "zig");
       } else if (IsLinux()) {
         std::filesystem::copy_file("/zip/zig-linux-aarch64", cache_dir / "zig");
