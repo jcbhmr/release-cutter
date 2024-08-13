@@ -55,6 +55,8 @@ Right now there's [a bug in Cosmopolitan Libc](https://github.com/jart/cosmopoli
 
 The GitHub actions workflow doesn't actually build Zig from source; it pulls the precompiled artifacts from the [Zig downloads page](https://ziglang.org/download/) and moves them around to where the script expects the build artifacts to be. It also only runs the `./build-zig-ape` script and not the full `./script` release script.
 
+TODO: [I need some assistance in handling non-zero exit codes and process signals properly in Windows.](https://github.com/jcbhmr/release-cutter/blob/4a39e0a5d1222105f544afa7ad33dfcb29181ac3/zig-ape.cpp#L106) If anyone reading this knows how to `waitpid()` correctly please enlighten me! ☺️
+
 ---
 
 # Release Cutter
