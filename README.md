@@ -1,6 +1,6 @@
 # Zig multiplatform
 
-🏷️ Single-executable Self-extracting multiplatform Zig releases \
+🏷️ Single-executable self-extracting multiplatform Zig releases \
 🔀 Forked from [ziglang/releases-cutter](https://github.com/ziglang/release-cutter)
 
 <table align=center><td>
