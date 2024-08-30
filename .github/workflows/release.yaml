@@ -23,18 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
-        with:
-          repository: jart/cosmopolitan
-          path: cosmopolitan
-      - working-directory: cosmopolitan
-        run: |
-          sudo wget -O /usr/bin/ape https://cosmo.zip/pub/cosmos/bin/ape-$(uname -m).elf
-          sudo chmod +x /usr/bin/ape
-          sudo sh -c "echo ':APE:M::MZqFpD::/usr/bin/ape:' >/proc/sys/fs/binfmt_misc/register"
-          sudo sh -c "echo ':APE-jart:M::jartsr::/usr/bin/ape:' >/proc/sys/fs/binfmt_misc/register"
-          ./tool/cosmocc/package.sh
-          echo "$PWD/cosmocc/bin" >> "$GITHUB_PATH"
+      - uses: bjia56/setup-cosmocc@v0.0.3
+      # This fakes the from-source build outputs. Building from Zig source takes way too long.
       - env:
           TAGVER: ${{ needs.tagver.outputs.tagver }}
         run: |
